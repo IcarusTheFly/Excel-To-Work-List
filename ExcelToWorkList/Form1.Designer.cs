@@ -51,7 +51,7 @@
             // openExcelFile
             // 
             this.openExcelFile.FileName = "Select your Excel file";
-            this.openExcelFile.Filter = "Excel document (*.xlsx)|*.xlsx";
+            this.openExcelFile.Filter = "Excel document (*.xlsx)|*.xlsx|Excel document 2000 (*.xls)|*.xls";
             this.openExcelFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openExcelFile_FileOk);
             // 
             // tbInput
