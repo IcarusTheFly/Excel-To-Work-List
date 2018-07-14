@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,7 +7,8 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
- using System.Windows.Forms;
+using System.Windows.Forms;
+using Microsoft.Office;
 
 namespace WindowsFormsApp1
 {
@@ -30,9 +32,25 @@ namespace WindowsFormsApp1
             Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
             Microsoft.Office.Interop.Excel.Workbook wb = excel.Workbooks.Open(openExcelFile.FileName);
 
-            /*var excelApp = new Excel.Application();
-            excelApp.Visible = true;
-            excelApp.Workbooks.Open(btnChoose2.Text);*/
+            Hashtable content = new Hashtable();
+            foreach (Microsoft.Office.Interop.Excel.Worksheet displayWorksheet in wb.Worksheets)
+            {
+                for (int i = 7; i < 35; i++)
+                {
+                    if (displayWorksheet.Cells[i, 2].Value == null) {
+                        break;
+                    }
+
+                    if (displayWorksheet.Cells[i, 4].Borders[Microsoft.Office.Interop.Excel.XlBordersIndex.xlDiagonalDown].LineStyle != 1)
+                    {
+                        if (!content.ContainsKey(displayWorksheet.Cells[7, 9].Value))
+                        {
+                            content[displayWorksheet.Cells[7, 9].Value] = new List<string>(); // All the elements here
+                        }
+                        content[displayWorksheet.Cells[7, 9].Value].Add(displayWorksheet.Cells[i, 2].Value + " - " + displayWorksheet.Cells[i, 3].Value);
+                    }
+                }
+            }
         }
     }
 }
