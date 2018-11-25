@@ -35,6 +35,11 @@ namespace WindowsFormsApp1
             Excel.Workbook wb = excel.Workbooks.Open(openExcelFile.FileName);
 
             Hashtable content = new Hashtable(); // All the elements here
+            //int countData4 = 0;
+            //int countData5 = 0;
+            //int countNoData = 0;
+            //int countTotal = 0;
+
             foreach (Excel.Worksheet displayWorksheet in wb.Worksheets)
             {
                 string[] titleArray = displayWorksheet.Cells[7, 9].Value.Split('\n');
@@ -42,18 +47,40 @@ namespace WindowsFormsApp1
                 if (titleArray.Count() > 1)
                 {
                     title = titleArray[1];
-                } else
+                }
+                else
                 {
                     title = titleArray[0];
                 }
 
                 for (int i = 7; i < 35; i++)
                 {
-                    if (displayWorksheet.Cells[i, 2].Value == null || Convert.ToString(displayWorksheet.Cells[i, 2].Value).Trim() == "") {
+                    if (displayWorksheet.Cells[i, 2].Value == null || Convert.ToString(displayWorksheet.Cells[i, 2].Value).Trim() == "")
+                    {
                         break;
                     }
 
-                    if (displayWorksheet.Cells[i, 4].Borders[Excel.XlBordersIndex.xlDiagonalDown].LineStyle != 1)
+                    //countTotal++;
+
+                    if (displayWorksheet.Cells[i, 4].Borders[Excel.XlBordersIndex.xlDiagonalDown].LineStyle == 1)
+                    {
+                        //countData4++;
+                    }
+                    else if (displayWorksheet.Cells[i, 5].Borders[Excel.XlBordersIndex.xlDiagonalDown].LineStyle == 1)
+                    {
+                        if (!content.ContainsKey("Negative"))
+                        {
+                            content["Negative"] = new List<string>(); // will create our list for elements with data 5
+                        }
+                        ((List<string>)content["Negative"]).Add(titleArray[2] + " - " + displayWorksheet.Cells[i, 2].Value + " - " + displayWorksheet.Cells[i, 3].Value);
+                        //countData5++;
+                    }
+                    else
+                    {
+                        //countNoData++;
+                    }
+
+                    if (displayWorksheet.Cells[i, 4].Borders[Excel.XlBordersIndex.xlDiagonalDown].LineStyle == 1)
                     {
                         if (!content.ContainsKey(title))
                         {
@@ -76,13 +103,12 @@ namespace WindowsFormsApp1
                 titleIndex++;
                 listIndexTitles.Add(titleIndex);
                 doc.Content.Text += d.Key;
-                
+
                 foreach (string s in (List<string>)d.Value)
                 {
                     titleIndex++;
                     doc.Content.Text += s;
                 }
-                
             }
 
             foreach (int i in listIndexTitles)
